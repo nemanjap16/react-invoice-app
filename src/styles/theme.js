@@ -1,4 +1,8 @@
 export const colors = {
+  statusPending: "hsl(34, 100%, 50%)",
+  statusPaid: "hsl(160, 67%, 52%)",
+  statusDraft: "hsl(231, 73%, 93%)",
+  checkboxLight: "#DFE3FA",
   purple: "hsl(252 94% 67%)",
   lightPurple: "hsl(252 100% 73%)",
   gray: "hsl(231 20% 61%)",
@@ -36,6 +40,7 @@ export const theme = {
     grayishToWhite: colors.grayish,
     bgItem: colors.bgLight,
     bgTotal: colors.darkBlue,
+    checkboxBg: colors.checkboxLight,
   },
   dark: {
     name: "dark-theme",
@@ -56,5 +61,6 @@ export const theme = {
     grayishToWhite: colors.white,
     bgItem: colors.darkBlue,
     bgTotal: colors.black,
+    checkboxBg: colors.bgDark,
   },
 };

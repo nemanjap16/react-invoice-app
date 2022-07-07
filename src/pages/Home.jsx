@@ -54,8 +54,7 @@ const Home = () => {
         <FlexColumn>
           <Title>Invoices</Title>
           <Subtitle>
-            There are <span>{}</span>
-            pending invoies
+            There are <span>{render.length}</span> invoices
           </Subtitle>
         </FlexColumn>
         <Flex ref={arrowDown} onClick={toggleFilter}>
@@ -123,7 +122,6 @@ const Flex = styled.div`
   align-items: center;
   gap: 16px;
   cursor: pointer;
-
   position: relative;
 
   .filter {
@@ -154,8 +152,9 @@ const Circle = styled.span`
   height: 32px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.white};
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const InvoicesContainer = styled.div`
