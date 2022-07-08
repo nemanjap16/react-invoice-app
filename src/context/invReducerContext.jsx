@@ -4,6 +4,7 @@ export const invoiceReducerContext = createContext();
 
 const initialState = {
   invoices: [],
+  currentInvoice: null,
 };
 
 export const invoiceReducer = (state, action) => {
@@ -11,6 +12,11 @@ export const invoiceReducer = (state, action) => {
     case "SET_INVOICES":
       return {
         invoices: [...action.payload],
+      };
+
+    case "CURRENT_INVOICE":
+      return {
+        currentInvoice: action.payload,
       };
 
     case "CREATE_INVOICE":
