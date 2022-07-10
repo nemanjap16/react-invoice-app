@@ -23,12 +23,10 @@ const Invoices = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        console.log(response);
         dispatch({ type: "CURRENT_INVOICE", payload: data });
         setRender(data);
-      }
-      if (response.status == 404) {
-        console.log(response);
+      } else {
+        navigate("/");
       }
     };
 
