@@ -2,18 +2,10 @@ import styled, { ThemeContext } from "styled-components";
 import { Link } from "react-router-dom";
 import ArrowRight from "../components/ArrowRight";
 import { useContext } from "react";
+import { formatDate } from "../utilities/utility";
 
 const Invoice = ({ invoice, id }) => {
   const { currentTheme } = useContext(ThemeContext);
-
-  const formatDate = (date) => {
-    date = new Date(date).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-    return date;
-  };
 
   return (
     <NavLink to={`/invoices/${id}`}>

@@ -18,6 +18,9 @@ export const colors = {
   white: "hsl(0, 0%, 100%)",
   goBackHover: "hsl(252, 100%, 73%)",
   transparent: "transparent",
+  text: "#7E88C3",
+  invoiceDetailsBgLight: "#f9fafe",
+  invoiceDetailsBgDark: "#252945",
 };
 
 export const theme = {
@@ -41,6 +44,8 @@ export const theme = {
     bgItem: colors.bgLight,
     bgTotal: colors.darkBlue,
     checkboxBg: colors.checkboxLight,
+    text: colors.text,
+    invoiceDetailsBg: colors.invoiceDetailsBgLight,
   },
   dark: {
     name: "dark-theme",
@@ -62,5 +67,7 @@ export const theme = {
     bgItem: colors.darkBlue,
     bgTotal: colors.black,
     checkboxBg: colors.bgDark,
+    text: colors.white,
+    invoiceDetailsBg: colors.invoiceDetailsBgDark,
   },
 };
