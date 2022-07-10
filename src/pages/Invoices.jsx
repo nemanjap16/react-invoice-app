@@ -10,7 +10,7 @@ import { formatDate } from "../utilities/utility";
 
 const Invoices = () => {
   const { currentTheme } = useContext(ThemeContext);
-  const { currentInvoice, dispatch } = useInvoicesContext();
+  const { dispatch } = useInvoicesContext();
   const navigate = useNavigate();
   const { id } = useParams();
   let [render, setRender] = useState([]);
@@ -23,8 +23,12 @@ const Invoices = () => {
       );
       const data = await response.json();
       if (response.ok) {
+        console.log(response);
         dispatch({ type: "CURRENT_INVOICE", payload: data });
-        setRender(currentInvoice);
+        setRender(data);
+      }
+      if (response.status == 404) {
+        console.log(response);
       }
     };
 
@@ -48,12 +52,12 @@ const Invoices = () => {
           <Header variant={currentTheme}>
             <Flex>
               <Text style={{ marginRight: "28px" }}>Status</Text>
-              {render ? <InvoiceStatus status={currentInvoice?.status} /> : ""}
+              {render ? <InvoiceStatus status={render?.status} /> : ""}
             </Flex>
             <Buttons>
               <Button type={"edit"}>Edit</Button>
               <Button type={"delete"}>Delete</Button>
-              {currentInvoice?.status !== "paid" && (
+              {render?.status !== "paid" && (
                 <Button type={"mark as paid"}>Mark as Paid</Button>
               )}
             </Buttons>
@@ -62,15 +66,15 @@ const Invoices = () => {
             <FlexBetween style={{ marginBottom: "21px" }}>
               <Invoice>
                 <ItemID>
-                  <span>#</span> {currentInvoice?._id}{" "}
+                  <span>#</span> {render?._id}{" "}
                 </ItemID>
-                <ItemName>{currentInvoice?.description}</ItemName>
+                <ItemName>{render?.description}</ItemName>
               </Invoice>
               <SenderAddress>
-                <p>{currentInvoice?.senderAddress.street}</p>
-                <p>{currentInvoice?.senderAddress.city}</p>
-                <p>{currentInvoice?.senderAddress.postCode}</p>
-                <p>{currentInvoice?.senderAddress.country}</p>
+                <p>{render?.senderAddress.street}</p>
+                <p>{render?.senderAddress.city}</p>
+                <p>{render?.senderAddress.postCode}</p>
+                <p>{render?.senderAddress.country}</p>
               </SenderAddress>
             </FlexBetween>
             <ContainerColumn>
@@ -85,25 +89,25 @@ const Invoices = () => {
                 >
                   <div>
                     <h5>Invoice Date</h5>
-                    <h3>{formatDate(currentInvoice?.createdAt)}</h3>
+                    <h3>{formatDate(render?.createdAt)}</h3>
                   </div>
                   <div>
                     <h5>Payment Due</h5>
-                    <h3>{formatDate(currentInvoice?.paymentDue)}</h3>
+                    <h3>{formatDate(render?.paymentDue)}</h3>
                   </div>
                 </div>
               </Column>
               <Column>
                 <h5>Bill To</h5>
-                <h3>{currentInvoice?.clientName}</h3>
-                <p>{currentInvoice?.clientAddress.street}</p>
-                <p>{currentInvoice?.clientAddress.city}</p>
-                <p>{currentInvoice?.clientAddress.postCode}</p>
-                <p>{currentInvoice?.clientAddress.country}</p>
+                <h3>{render?.clientName}</h3>
+                <p>{render?.clientAddress.street}</p>
+                <p>{render?.clientAddress.city}</p>
+                <p>{render?.clientAddress.postCode}</p>
+                <p>{render?.clientAddress.country}</p>
               </Column>
               <Column>
                 <h5>Sent To</h5>
-                <h3>{currentInvoice?.clientEmail}</h3>
+                <h3>{render?.clientEmail}</h3>
               </Column>
             </ContainerColumn>
             <InvoiceDetails>
@@ -121,7 +125,7 @@ const Invoices = () => {
                 <div style={{ flex: 1, textAlign: "right" }}>Total</div>
               </FlexBetween>
               <div>
-                {currentInvoice.items.map((el, index) => (
+                {render.items.map((el, index) => (
                   <FlexBetween style={{ marginBottom: "32px" }} key={index}>
                     <div className="bold" style={{ flex: 2 }}>
                       {el.name}
@@ -154,9 +158,7 @@ const Invoices = () => {
             <InvoiceTotal variant={currentTheme}>
               <FlexBetween>
                 <p className="amountDue">Amount Due</p>
-                <p className="total">
-                  $ {Number(currentInvoice.total).toFixed(2)}
-                </p>
+                <p className="total">$ {Number(render.total).toFixed(2)}</p>
               </FlexBetween>
             </InvoiceTotal>
           </Details>
