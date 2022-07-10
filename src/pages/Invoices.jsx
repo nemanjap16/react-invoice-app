@@ -13,6 +13,7 @@ const Invoices = () => {
   const { currentInvoice, dispatch } = useInvoicesContext();
   const navigate = useNavigate();
   const { id } = useParams();
+  let [render, setRender] = useState([]);
   const [load, setLoad] = useState(true);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ const Invoices = () => {
       const data = await response.json();
       if (response.ok) {
         dispatch({ type: "CURRENT_INVOICE", payload: data });
+        setRender(currentInvoice);
       }
     };
 
@@ -46,11 +48,7 @@ const Invoices = () => {
           <Header variant={currentTheme}>
             <Flex>
               <Text style={{ marginRight: "28px" }}>Status</Text>
-              {currentInvoice ? (
-                <InvoiceStatus status={currentInvoice?.status} />
-              ) : (
-                ""
-              )}
+              {render ? <InvoiceStatus status={currentInvoice?.status} /> : ""}
             </Flex>
             <Buttons>
               <Button type={"edit"}>Edit</Button>
