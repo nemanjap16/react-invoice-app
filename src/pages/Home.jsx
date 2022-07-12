@@ -5,11 +5,13 @@ import ArrowDownIcon from "../components/ArrowDownIcon";
 import PlusIcon from "../components/PlusIcon";
 import CheckboxFilter from "../components/CheckboxFilter";
 import Invoice from "../components/Invoice";
+import Loader from "../components/Loader";
 
 const Home = () => {
   const { invoices, dispatch } = useInvoicesContext();
   let [isOpen, setIsOpen] = useState(false);
   let [render, setRender] = useState([]);
+  let [loading, setLoading] = useState(true);
   const arrowDown = useRef(null);
 
   useEffect(() => {
@@ -21,6 +23,7 @@ const Home = () => {
       if (response.ok) {
         dispatch({ type: "SET_INVOICES", payload: data });
         setRender(data);
+        setLoading(false);
       }
     };
 
@@ -50,33 +53,39 @@ const Home = () => {
   };
   return (
     <>
-      <Container>
-        <FlexColumn>
-          <Title>Invoices</Title>
-          <Subtitle>
-            There are <span>{render.length}</span> invoices
-          </Subtitle>
-        </FlexColumn>
-        <Flex ref={arrowDown} onClick={toggleFilter}>
-          <Text>Filter by status</Text>
-          <ArrowDownIcon />
-          <div className="filter" onClick={(e) => e.stopPropagation()}>
-            {isOpen && <CheckboxFilter handleFilter={handleFilter} />}
-          </div>
-        </Flex>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Container>
+            <FlexColumn>
+              <Title>Invoices</Title>
+              <Subtitle>
+                There are <span>{render.length}</span> invoices
+              </Subtitle>
+            </FlexColumn>
+            <Flex ref={arrowDown} onClick={toggleFilter}>
+              <Text>Filter by status</Text>
+              <ArrowDownIcon />
+              <div className="filter" onClick={(e) => e.stopPropagation()}>
+                {isOpen && <CheckboxFilter handleFilter={handleFilter} />}
+              </div>
+            </Flex>
 
-        <Button>
-          <Circle>
-            <PlusIcon color="#7C5DFA" />
-          </Circle>
-          New Invoice
-        </Button>
-      </Container>
-      <InvoicesContainer>
-        {render?.map((invoice) => (
-          <Invoice key={invoice._id} invoice={invoice} id={invoice._id} />
-        ))}
-      </InvoicesContainer>
+            <Button>
+              <Circle>
+                <PlusIcon color="#7C5DFA" />
+              </Circle>
+              New Invoice
+            </Button>
+          </Container>
+          <InvoicesContainer>
+            {render?.map((invoice) => (
+              <Invoice key={invoice._id} invoice={invoice} id={invoice._id} />
+            ))}
+          </InvoicesContainer>
+        </>
+      )}
     </>
   );
 };

@@ -1,45 +1,36 @@
 import styled, { ThemeContext } from "styled-components";
 import { useInvoicesContext } from "../hooks/useInvoicesContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ArrowLeft from "../components/ArrowLeft";
 import InvoiceStatus from "../components/InvoiceStatus";
 import Loader from "../components/Loader";
 import Button from "../components/Button";
 import { formatDate } from "../utilities/utility";
+import useFetch from "../hooks/useFetch";
+import { useEffect } from "react";
 
 const Invoices = () => {
   const { currentTheme } = useContext(ThemeContext);
   const { dispatch } = useInvoicesContext();
   const navigate = useNavigate();
   const { id } = useParams();
-  let [render, setRender] = useState([]);
-  const [load, setLoad] = useState(true);
+
+  const { data, isLoading, error } = useFetch(
+    `https://invoices-mevn.herokuapp.com/api/invoices/${id}`
+  );
+  if (error) {
+    console.log(error);
+    navigate("/");
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        `https://invoices-mevn.herokuapp.com/api/invoices/${id}`
-      );
-      const data = await response.json();
-      if (response.ok) {
-        dispatch({ type: "CURRENT_INVOICE", payload: data });
-        setRender(data);
-      } else {
-        navigate("/");
-      }
-    };
-
-    fetchData();
-  }, [dispatch]);
-
-  setTimeout(() => {
-    setLoad(false);
-  }, 1000);
+    dispatch({ type: "CURRENT_INVOICE", payload: data });
+  }, [isLoading]);
 
   return (
     <>
-      {!load ? (
+      {!isLoading ? (
         <Container>
           <Flex style={{ marginBottom: "32px" }}>
             <ArrowLeft />
@@ -50,12 +41,12 @@ const Invoices = () => {
           <Header variant={currentTheme}>
             <Flex>
               <Text style={{ marginRight: "28px" }}>Status</Text>
-              {render ? <InvoiceStatus status={render?.status} /> : ""}
+              {data ? <InvoiceStatus status={data?.status} /> : ""}
             </Flex>
             <Buttons>
               <Button type={"edit"}>Edit</Button>
               <Button type={"delete"}>Delete</Button>
-              {render?.status !== "paid" && (
+              {data?.status !== "paid" && (
                 <Button type={"mark as paid"}>Mark as Paid</Button>
               )}
             </Buttons>
@@ -64,15 +55,15 @@ const Invoices = () => {
             <FlexBetween style={{ marginBottom: "21px" }}>
               <Invoice>
                 <ItemID>
-                  <span>#</span> {render?._id}{" "}
+                  <span>#</span> {data?._id}{" "}
                 </ItemID>
-                <ItemName>{render?.description}</ItemName>
+                <ItemName>{data?.description}</ItemName>
               </Invoice>
               <SenderAddress>
-                <p>{render?.senderAddress.street}</p>
-                <p>{render?.senderAddress.city}</p>
-                <p>{render?.senderAddress.postCode}</p>
-                <p>{render?.senderAddress.country}</p>
+                <p>{data?.senderAddress.street}</p>
+                <p>{data?.senderAddress.city}</p>
+                <p>{data?.senderAddress.postCode}</p>
+                <p>{data?.senderAddress.country}</p>
               </SenderAddress>
             </FlexBetween>
             <ContainerColumn>
@@ -87,25 +78,25 @@ const Invoices = () => {
                 >
                   <div>
                     <h5>Invoice Date</h5>
-                    <h3>{formatDate(render?.createdAt)}</h3>
+                    <h3>{formatDate(data?.createdAt)}</h3>
                   </div>
                   <div>
                     <h5>Payment Due</h5>
-                    <h3>{formatDate(render?.paymentDue)}</h3>
+                    <h3>{formatDate(data?.paymentDue)}</h3>
                   </div>
                 </div>
               </Column>
               <Column>
                 <h5>Bill To</h5>
-                <h3>{render?.clientName}</h3>
-                <p>{render?.clientAddress.street}</p>
-                <p>{render?.clientAddress.city}</p>
-                <p>{render?.clientAddress.postCode}</p>
-                <p>{render?.clientAddress.country}</p>
+                <h3>{data?.clientName}</h3>
+                <p>{data?.clientAddress.street}</p>
+                <p>{data?.clientAddress.city}</p>
+                <p>{data?.clientAddress.postCode}</p>
+                <p>{data?.clientAddress.country}</p>
               </Column>
               <Column>
                 <h5>Sent To</h5>
-                <h3>{render?.clientEmail}</h3>
+                <h3>{data?.clientEmail}</h3>
               </Column>
             </ContainerColumn>
             <InvoiceDetails>
@@ -123,7 +114,7 @@ const Invoices = () => {
                 <div style={{ flex: 1, textAlign: "right" }}>Total</div>
               </FlexBetween>
               <div>
-                {render.items.map((el, index) => (
+                {data?.items.map((el, index) => (
                   <FlexBetween style={{ marginBottom: "32px" }} key={index}>
                     <div className="bold" style={{ flex: 2 }}>
                       {el.name}
@@ -156,7 +147,7 @@ const Invoices = () => {
             <InvoiceTotal variant={currentTheme}>
               <FlexBetween>
                 <p className="amountDue">Amount Due</p>
-                <p className="total">$ {Number(render.total).toFixed(2)}</p>
+                <p className="total">$ {Number(data?.total).toFixed(2)}</p>
               </FlexBetween>
             </InvoiceTotal>
           </Details>

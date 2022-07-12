@@ -1,26 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import styled, { ThemeContext } from "styled-components";
 import SunIcon from "./SunIcon";
 import MoonIcon from "./MoonIcon";
 
 const LeftBar = () => {
-  const [icon, setIcon] = useState(false);
   const { setCurrentTheme, currentTheme, dark, light } =
     useContext(ThemeContext);
 
-  const toggleIcon = () => {
-    setIcon(!icon);
-    if (icon == true) {
-      return setCurrentTheme(light);
-    }
-    if (icon == false) {
-      return setCurrentTheme(dark);
+  const toggleIcon = (e) => {
+    let icon = e.target.dataset.name;
+    if (icon == "moon") {
+      setCurrentTheme(dark);
+      localStorage.setItem("invoice-theme", JSON.stringify("dark"));
+    } else {
+      setCurrentTheme(light);
+      localStorage.setItem("invoice-theme", JSON.stringify("light"));
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("invoice-theme", JSON.stringify(currentTheme.name));
-  }, [icon]);
 
   return (
     <Sidebar>
@@ -28,9 +24,13 @@ const LeftBar = () => {
         <img src="/icons/logo.svg" alt="logo" width={40} height={37} />
       </LogoContainer>
       <ImgContainer>
-        <SunIconStyled onClick={toggleIcon}>
-          {icon ? <SunIcon color="#858BB2" /> : <MoonIcon color="#7E88C3" />}
-        </SunIconStyled>
+        <IconStyled onClick={toggleIcon}>
+          {currentTheme.name == "light-theme" ? (
+            <MoonIcon color="#7E88C3" />
+          ) : (
+            <SunIcon color="#858BB2" />
+          )}
+        </IconStyled>
         <ImgUser>
           <img src="/icons/image-avatar.jpg" alt="user" />
         </ImgUser>
@@ -110,7 +110,7 @@ const ImgUser = styled.div`
   }
 `;
 
-const SunIconStyled = styled.div`
+const IconStyled = styled.div`
   cursor: pointer;
 
   &:hover {
