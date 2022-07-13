@@ -46,6 +46,8 @@ export const theme = {
     checkboxBg: colors.checkboxLight,
     text: colors.text,
     invoiceDetailsBg: colors.invoiceDetailsBgLight,
+    formBg: colors.white,
+    plusIcon: colors.purple,
   },
   dark: {
     name: "dark-theme",
@@ -69,5 +71,7 @@ export const theme = {
     checkboxBg: colors.bgDark,
     text: colors.white,
     invoiceDetailsBg: colors.invoiceDetailsBgDark,
+    formBg: colors.bgDark,
+    plusIcon: colors.lightGray,
   },
 };

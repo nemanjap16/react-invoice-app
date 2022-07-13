@@ -16,10 +16,10 @@ function App() {
     let invTheme = window.localStorage.getItem("invoice-theme");
 
     if (JSON.parse(invTheme) == "dark") {
-      setCurrentTheme(dark);
+      return setCurrentTheme(dark);
     }
     if (JSON.parse(invTheme) == "light") {
-      setCurrentTheme(light);
+      return setCurrentTheme(light);
     }
   }, [currentTheme]);
 

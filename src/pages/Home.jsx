@@ -6,6 +6,7 @@ import PlusIcon from "../components/PlusIcon";
 import CheckboxFilter from "../components/CheckboxFilter";
 import Invoice from "../components/Invoice";
 import Loader from "../components/Loader";
+import FormComponent from "../components/FormComponent";
 
 const Home = () => {
   const { invoices, dispatch } = useInvoicesContext();
@@ -58,6 +59,7 @@ const Home = () => {
       ) : (
         <>
           <Container>
+            <FormComponent />
             <FlexColumn>
               <Title>Invoices</Title>
               <Subtitle>

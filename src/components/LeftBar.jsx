@@ -55,6 +55,7 @@ const Sidebar = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  z-index: 2;
 `;
 
 const LogoContainer = styled.div`
