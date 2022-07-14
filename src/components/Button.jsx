@@ -1,10 +1,14 @@
 import { useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 
-const Button = ({ type }) => {
+const Button = ({ type, toggleForm }) => {
   const { currentTheme } = useContext(ThemeContext);
   return (
-    <StyledButton theme={currentTheme} variant={type}>{`${type}`}</StyledButton>
+    <StyledButton
+      onClick={toggleForm}
+      theme={currentTheme}
+      variant={type}
+    >{`${type}`}</StyledButton>
   );
 };
 
@@ -22,6 +26,7 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   ${(props) => {
     switch (props.variant) {
       case "edit":
@@ -41,6 +46,24 @@ const StyledButton = styled.button`
           backgroundColor:
             props.theme.name == "light-theme" ? "#7C5DFA" : "#7C5DFA",
           color: props.theme.name == "light-theme" ? "#FFF" : "#FFF",
+        };
+      case "discard":
+        return {
+          backgroundColor:
+            props.theme.name == "light-theme" ? "#F9FAFE" : "#F9FAFE",
+          color: props.theme.name == "light-theme" ? "#7E88C3" : "#7E88C3",
+        };
+      case "save as draft":
+        return {
+          backgroundColor:
+            props.theme.name == "light-theme" ? "#373B53" : "#373B53",
+          color: props.theme.name == "light-theme" ? "#888EB0" : "#DFE3FA",
+        };
+      case "save & send":
+        return {
+          backgroundColor:
+            props.theme.name == "light-theme" ? "#7C5DFA" : "#7C5DFA",
+          color: props.theme.name == "light-theme" ? "#DFE3FA" : "#DFE3FA",
         };
 
       default:
@@ -68,6 +91,24 @@ const StyledButton = styled.button`
             backgroundColor:
               props.theme.name == "light-theme" ? "#9277FF" : "#9277FF",
             color: props.theme.name == "light-theme" ? "#FFF" : "#FFF",
+          };
+        case "discard":
+          return {
+            backgroundColor:
+              props.theme.name == "light-theme" ? "#7E88C3" : "#7E88C3",
+            color: props.theme.name == "light-theme" ? "#fff" : "#fff",
+          };
+        case "save as draft":
+          return {
+            backgroundColor:
+              props.theme.name == "light-theme" ? "#0C0E16" : "#0C0E16",
+            color: props.theme.name == "light-theme" ? "#888EB0" : "#888EB0",
+          };
+        case "save & send":
+          return {
+            backgroundColor:
+              props.theme.name == "light-theme" ? "#9277FF" : "#9277FF",
+            color: props.theme.name == "light-theme" ? "#fff" : "#fff",
           };
 
         default:

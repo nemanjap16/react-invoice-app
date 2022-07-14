@@ -5,6 +5,7 @@ export const invoiceReducerContext = createContext();
 const initialState = {
   invoices: [],
   currentInvoice: null,
+  isOpen: true,
 };
 
 export const invoiceReducer = (state, action) => {
@@ -32,6 +33,12 @@ export const invoiceReducer = (state, action) => {
         invoices: state.invoices.filter(
           (invoice) => invoice._id !== action.payload._id
         ),
+      };
+
+    case "TOGGLE_FORM":
+      return {
+        isOpen: !state.isOpen,
+        invoices: [...state.invoices],
       };
 
     default:

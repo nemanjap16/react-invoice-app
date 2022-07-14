@@ -74,7 +74,7 @@ const Home = () => {
               </div>
             </Flex>
 
-            <Button>
+            <Button onClick={() => dispatch({ type: "TOGGLE_FORM" })}>
               <Circle>
                 <PlusIcon color="#7C5DFA" />
               </Circle>
@@ -156,6 +156,10 @@ const Button = styled.button`
   color: ${({ theme }) => theme.colors.white};
   background-color: ${({ theme }) => theme.colors.lightPurple};
   cursor: pointer;
+
+  &:hover {
+    background-color: rgba(146, 119, 255, 0.8);
+  }
 `;
 
 const Circle = styled.span`

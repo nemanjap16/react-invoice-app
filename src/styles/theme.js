@@ -47,7 +47,8 @@ export const theme = {
     text: colors.text,
     invoiceDetailsBg: colors.invoiceDetailsBgLight,
     formBg: colors.white,
-    plusIcon: colors.purple,
+    plusIcon: "#7E88C3",
+    inputBorder: colors.grayish,
   },
   dark: {
     name: "dark-theme",
@@ -72,6 +73,7 @@ export const theme = {
     text: colors.white,
     invoiceDetailsBg: colors.invoiceDetailsBgDark,
     formBg: colors.bgDark,
-    plusIcon: colors.lightGray,
+    plusIcon: "#DFE3FA",
+    inputBorder: colors.transparent,
   },
 };
