@@ -1,14 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import styled, { ThemeContext } from "styled-components";
 import FormField from "../components/FormField.jsx";
 import { useState } from "react";
 import PlusIcon from "./PlusIcon";
 import { useInvoicesContext } from "../hooks/useInvoicesContext.js";
 import Button from "./Button.jsx";
+import CustomSelect from "./CustomSelect.jsx";
 
-const FormComponent = (props) => {
+const FormComponent = () => {
   const { currentTheme } = useContext(ThemeContext);
-  const { dispatch, isOpen } = useInvoicesContext();
+  const { dispatch, currentInvoice, isOpen } = useInvoicesContext();
 
   // const handleForm = (e) => {
   //   e.preventDefault();
@@ -18,21 +19,60 @@ const FormComponent = (props) => {
 
   // form state
   const [values, setValues] = useState({
-    username: "",
-    lastName: "",
-    email: "",
-    date: "",
+    streetAddress: "",
+    city: "",
+    postCode: "",
+    country: "",
+    clientName: "",
+    clientEmail: "",
+    clientStreetAddress: "",
+    clientCity: "",
+    clientPostCode: "",
+    clientCountry: "",
+    createdAt: "",
+    paymentDue: "",
+    paymentTerms: "",
+    description: "",
   });
+
+  useEffect(() => {
+    setValues({
+      streetAddress: currentInvoice?.senderAddress?.street,
+      city: currentInvoice?.senderAddress?.city,
+      postCode: currentInvoice?.senderAddress?.postCode,
+      country: currentInvoice?.senderAddress?.country,
+      clientName: currentInvoice?.clientName,
+      clientEmail: currentInvoice?.clientEmail,
+      clientStreetAddress: currentInvoice?.clientAddress?.street,
+      clientCity: currentInvoice?.clientAddress?.city,
+      clientPostCode: currentInvoice?.clientAddress?.postCode,
+      clientCountry: currentInvoice?.clientAddress?.country,
+      createdAt: currentInvoice?.createdAt,
+      paymentDue: currentInvoice?.paymentDue,
+      paymentTerms: currentInvoice?.paymentTerms,
+      description: currentInvoice?.description,
+    });
+  }, [currentInvoice]);
 
   // create handle form function
   const handleForm = (e) => {
     e.preventDefault();
     console.log(values);
     setValues({
-      username: "",
-      lastName: "",
-      email: "",
-      date: "",
+      streetAddress: "",
+      city: "",
+      postCode: "",
+      country: "",
+      clientName: "",
+      clientEmail: "",
+      clientStreetAddress: "",
+      clientCity: "",
+      clientPostCode: "",
+      clientCountry: "",
+      createdAt: "",
+      paymentDue: "",
+      paymentTerms: "",
+      description: "",
     });
   };
 
@@ -62,6 +102,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="streetAddress"
                     placeholder=""
+                    value={values.streetAddress}
                     label="Street Address"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -72,6 +113,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="city"
                     placeholder=""
+                    value={values.city}
                     label="City"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -80,6 +122,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="postCode"
                     placeholder=""
+                    value={values.postCode}
                     label="Post Code"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -88,6 +131,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="country"
                     placeholder=""
+                    value={values.country}
                     label="Country"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -99,6 +143,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="clientName"
                     placeholder=""
+                    value={values.clientName}
                     label="Client's Name"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -109,6 +154,7 @@ const FormComponent = (props) => {
                     type="email"
                     name="clientEmail"
                     placeholder="e.g. john@gmail.com"
+                    value={values.clientEmail}
                     label="Client's Email"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -119,6 +165,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="clientStreetAddress"
                     placeholder=""
+                    value={values.clientStreetAddress}
                     label="Street Address"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -129,6 +176,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="clientCity"
                     placeholder=""
+                    value={values.clientCity}
                     label="City"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -137,6 +185,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="clientPostCode"
                     placeholder=""
+                    value={values.clientPostCode}
                     label="Post Code"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -145,6 +194,7 @@ const FormComponent = (props) => {
                     type="text"
                     name="clientCountry"
                     placeholder=""
+                    value={values.clientCountry}
                     label="Country"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -154,44 +204,57 @@ const FormComponent = (props) => {
                   <FormField
                     type="date"
                     name="invoiceDate"
+                    value={values.date}
                     label="Invoice Date"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
                   />
-
-                  <select
-                    style={{ flex: 1 }}
+                  <CustomSelect
+                    label="Payment Terms"
+                    errMsg="Can't be empty!"
                     name="paymentTerms"
-                    id=""
-                  ></select>
+                    value={values.paymentTerms}
+                    options={["1", "7", "14", "30"]}
+                    values={values}
+                  />
                 </FormGroup>
                 <FormGroup>
                   <FormField
                     type="text"
                     name="projectDescription"
                     placeholder=""
+                    value={values.description}
                     label="Project Description"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
                   />
                 </FormGroup>
-
                 <ItemList>Item List</ItemList>
                 <FormGroup>
                   <FormField
                     type="text"
-                    name="projectDescription"
+                    name="itemName"
                     placeholder=""
-                    label="Project Description"
+                    label="Item Name"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
                   />
                   <FormField
-                    type="text"
-                    name="projectDescription"
+                    type="number"
+                    name="quantity"
                     placeholder=""
-                    label="Project Description"
-                    errMsg="Can't be empty!"
+                    value=""
+                    min="1"
+                    label="QTY."
+                    updateValue={handleChange}
+                  />
+                  <FormField
+                    type="number"
+                    name="price"
+                    placeholder=""
+                    value={currentInvoice ? "" : ""}
+                    min="1"
+                    label="Price"
                     updateValue={handleChange}
                   />
                 </FormGroup>

@@ -6,13 +6,14 @@ import ArrowLeft from "../components/ArrowLeft";
 import InvoiceStatus from "../components/InvoiceStatus";
 import Loader from "../components/Loader";
 import Button from "../components/Button";
+import FormComponent from "../components/FormComponent";
 import { formatDate } from "../utilities/utility";
 import useFetch from "../hooks/useFetch";
 import { useEffect } from "react";
 
 const Invoices = () => {
   const { currentTheme } = useContext(ThemeContext);
-  const { dispatch } = useInvoicesContext();
+  const { dispatch, currentInvoice } = useInvoicesContext();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -28,10 +29,15 @@ const Invoices = () => {
     dispatch({ type: "CURRENT_INVOICE", payload: data });
   }, [isLoading]);
 
+  const toggleForm = (e) => {
+    dispatch({ type: "TOGGLE_FORM" });
+  };
+
   return (
     <>
       {!isLoading ? (
         <Container>
+          <FormComponent currentInvoice={currentInvoice} />
           <Flex style={{ marginBottom: "32px" }}>
             <ArrowLeft />
             <GoBack style={{ marginLeft: "28px" }} onClick={() => navigate(-1)}>
@@ -44,7 +50,9 @@ const Invoices = () => {
               {data ? <InvoiceStatus status={data?.status} /> : ""}
             </Flex>
             <Buttons>
-              <Button type={"edit"}>Edit</Button>
+              <Button type={"edit"} toggleForm={toggleForm}>
+                Edit
+              </Button>
               <Button type={"delete"}>Delete</Button>
               {data?.status !== "paid" && (
                 <Button type={"mark as paid"}>Mark as Paid</Button>

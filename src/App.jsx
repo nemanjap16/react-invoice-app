@@ -7,6 +7,7 @@ import { ThemeProvider } from "styled-components";
 import { theme, colors } from "./styles/theme";
 import GlobalStyles from "./styles/GlobalStyles";
 import LeftBar from "./components/LeftBar";
+import Test from "./pages/Test";
 
 const { dark, light } = theme;
 
@@ -33,6 +34,7 @@ function App() {
           <LeftBar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/test" element={<Test />} />
             <Route path="/invoices/:id" element={<Invoices />} />
           </Routes>
         </ThemeProvider>
