@@ -1,10 +1,21 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState, useRef, useContext } from "react";
+import styled, { ThemeContext } from "styled-components";
 import ArrowDownIcon from "./ArrowDownIcon";
 
-const CustomSelect = ({ label, errMsg, options, value = 1, values }) => {
+const CustomSelect = ({ label, errMsg, options, value = 30, values }) => {
   const [paymentTerms, setPaymentTerms] = useState(false);
+  const [active, setActive] = useState(false);
+  const { currentTheme } = useContext(ThemeContext);
+  const arrowDown = useRef(null);
+
   const toggleTerms = () => {
+    if (paymentTerms) {
+      arrowDown.current.childNodes[1].style = "transform: rotate(0deg)";
+      setActive(!active);
+    } else {
+      arrowDown.current.childNodes[1].style = "transform: rotate(180deg)";
+      setActive(!active);
+    }
     return setPaymentTerms(!paymentTerms);
   };
 
@@ -24,7 +35,12 @@ const CustomSelect = ({ label, errMsg, options, value = 1, values }) => {
         <Label>{label}</Label>
         {value ? "" : <ErrorMessage>{errMsg}</ErrorMessage>}
       </FlexContainer>
-      <Container type="text">
+      <Container
+        active={active}
+        variant={currentTheme.name}
+        ref={arrowDown}
+        type="text"
+      >
         <Selected id="selected">
           {value > 1 ? `Net ${value} days` : `Net ${value} day`}
         </Selected>
@@ -33,7 +49,7 @@ const CustomSelect = ({ label, errMsg, options, value = 1, values }) => {
       <Options>
         {paymentTerms &&
           options.map((el) => (
-            <Option key={el} data-name={el} onClick={setOption}>
+            <Option key={el} data-name={el} onClick={(e) => setOption(e)}>
               {el > 1 ? `Net ${el} days` : `Net ${el} day`}
             </Option>
           ))}
@@ -75,7 +91,20 @@ const Container = styled.div`
   font-size: 12px;
   width: 100%;
   height: 55px;
-  border: 1px solid ${({ theme }) => theme.currentTheme.inputBorder};
+  ${(props) => {
+    switch (props.variant) {
+      case "light-theme":
+        return {
+          border: `1px solid`,
+          borderColor: props.active ? `#7C5DFA` : `#7e88c4`,
+        };
+      case "dark-theme":
+        return {
+          border: props.active ? "1px solid" : "1px transparent",
+          borderColor: `#7C5DFA`,
+        };
+    }
+  }}
   border-radius: 5px;
   padding: 0 18px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0, 0.2);
@@ -97,8 +126,7 @@ const Options = styled.div`
   right: 0;
   z-index: 5;
   background-color: ${({ theme }) => theme.currentTheme.inputBg};
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
-    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   display: flex;
   flex-direction: column;
   margin-top: 10px;

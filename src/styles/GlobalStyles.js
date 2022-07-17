@@ -109,6 +109,11 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Handle date picker */
+/* ::-webkit-calendar-picker-indicator {
+  opacity: 0;
+} */
 `;
 
 export default GlobalStyles;

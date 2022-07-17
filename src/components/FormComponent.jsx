@@ -6,6 +6,8 @@ import PlusIcon from "./PlusIcon";
 import { useInvoicesContext } from "../hooks/useInvoicesContext.js";
 import Button from "./Button.jsx";
 import CustomSelect from "./CustomSelect.jsx";
+import CustomDate from "./CustomDate.jsx";
+import { formatDate } from "../utilities/utility.js";
 
 const FormComponent = () => {
   const { currentTheme } = useContext(ThemeContext);
@@ -58,25 +60,25 @@ const FormComponent = () => {
   const handleForm = (e) => {
     e.preventDefault();
     console.log(values);
-    setValues({
-      streetAddress: "",
-      city: "",
-      postCode: "",
-      country: "",
-      clientName: "",
-      clientEmail: "",
-      clientStreetAddress: "",
-      clientCity: "",
-      clientPostCode: "",
-      clientCountry: "",
-      createdAt: "",
-      paymentDue: "",
-      paymentTerms: "",
-      description: "",
-    });
+    // setValues({
+    //   streetAddress: "",
+    //   city: "",
+    //   postCode: "",
+    //   country: "",
+    //   clientName: "",
+    //   clientEmail: "",
+    //   clientStreetAddress: "",
+    //   clientCity: "",
+    //   clientPostCode: "",
+    //   clientCountry: "",
+    //   createdAt: "",
+    //   paymentDue: "",
+    //   paymentTerms: "",
+    //   description: "",
+    // });
   };
 
-  // handle on Change
+  // handle on input change
   const handleChange = (e) => {
     setValues({
       ...values,
@@ -201,10 +203,18 @@ const FormComponent = () => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <FormField
+                  {/* <FormField
                     type="date"
                     name="invoiceDate"
                     value={values.date}
+                    label="Invoice Date"
+                    errMsg="Can't be empty!"
+                    updateValue={handleChange}
+                  /> */}
+                  <CustomDate
+                    type="date"
+                    name="invoiceDate"
+                    value={values.createdAt}
                     label="Invoice Date"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
