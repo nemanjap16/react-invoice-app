@@ -50,12 +50,12 @@ const Invoices = () => {
               {data ? <InvoiceStatus status={data?.status} /> : ""}
             </Flex>
             <Buttons>
-              <Button type={"edit"} toggleForm={toggleForm}>
+              <Button variant="edit" handleEvent={toggleForm}>
                 Edit
               </Button>
-              <Button type={"delete"}>Delete</Button>
+              <Button variant="delete">Delete</Button>
               {data?.status !== "paid" && (
-                <Button type={"mark as paid"}>Mark as Paid</Button>
+                <Button variant="mark as paid">Mark as Paid</Button>
               )}
             </Buttons>
           </Header>

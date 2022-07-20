@@ -1,14 +1,15 @@
 import { useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 
-const Button = ({ type, toggleForm }) => {
+const Button = ({ type, variant, handleEvent }) => {
   const { currentTheme } = useContext(ThemeContext);
   return (
     <StyledButton
-      onClick={toggleForm}
+      onClick={handleEvent}
       theme={currentTheme}
-      variant={type}
-    >{`${type}`}</StyledButton>
+      variant={variant}
+      type={type}
+    >{`${variant}`}</StyledButton>
   );
 };
 

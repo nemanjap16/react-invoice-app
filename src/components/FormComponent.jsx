@@ -1,17 +1,19 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
 import FormField from "../components/FormField.jsx";
-import { useState } from "react";
 import PlusIcon from "./PlusIcon";
 import { useInvoicesContext } from "../hooks/useInvoicesContext.js";
 import Button from "./Button.jsx";
 import CustomSelect from "./CustomSelect.jsx";
 import CustomDate from "./CustomDate.jsx";
-import { formatDate } from "../utilities/utility.js";
+import DeleteIcon from "./DeleteIcon";
 
 const FormComponent = () => {
   const { currentTheme } = useContext(ThemeContext);
   const { dispatch, currentInvoice, isOpen } = useInvoicesContext();
+  const [initial, setInitial] = useState([
+    { name: "", price: 1, quantity: 1, total: 1 },
+  ]);
 
   // const handleForm = (e) => {
   //   e.preventDefault();
@@ -33,27 +35,34 @@ const FormComponent = () => {
     clientCountry: "",
     createdAt: "",
     paymentDue: "",
-    paymentTerms: "",
+    paymentTerms: 30,
     description: "",
+    items: initial,
   });
 
   useEffect(() => {
-    setValues({
-      streetAddress: currentInvoice?.senderAddress?.street,
-      city: currentInvoice?.senderAddress?.city,
-      postCode: currentInvoice?.senderAddress?.postCode,
-      country: currentInvoice?.senderAddress?.country,
-      clientName: currentInvoice?.clientName,
-      clientEmail: currentInvoice?.clientEmail,
-      clientStreetAddress: currentInvoice?.clientAddress?.street,
-      clientCity: currentInvoice?.clientAddress?.city,
-      clientPostCode: currentInvoice?.clientAddress?.postCode,
-      clientCountry: currentInvoice?.clientAddress?.country,
-      createdAt: currentInvoice?.createdAt,
-      paymentDue: currentInvoice?.paymentDue,
-      paymentTerms: currentInvoice?.paymentTerms,
-      description: currentInvoice?.description,
-    });
+    if (currentInvoice !== undefined) {
+      setInitial(currentInvoice?.items);
+      //
+      setValues({
+        streetAddress: currentInvoice?.senderAddress?.street,
+        city: currentInvoice?.senderAddress?.city,
+        postCode: currentInvoice?.senderAddress?.postCode,
+        country: currentInvoice?.senderAddress?.country,
+        clientName: currentInvoice?.clientName,
+        clientEmail: currentInvoice?.clientEmail,
+        clientStreetAddress: currentInvoice?.clientAddress?.street,
+        clientCity: currentInvoice?.clientAddress?.city,
+        clientPostCode: currentInvoice?.clientAddress?.postCode,
+        clientCountry: currentInvoice?.clientAddress?.country,
+        createdAt: currentInvoice?.createdAt,
+        paymentDue: currentInvoice?.paymentDue,
+        paymentTerms: currentInvoice?.paymentTerms,
+        description: currentInvoice?.description,
+        items: currentInvoice?.items?.map((item) => item),
+        itemName: currentInvoice?.items?.map((item) => item.name),
+      });
+    }
   }, [currentInvoice]);
 
   // create handle form function
@@ -80,14 +89,37 @@ const FormComponent = () => {
 
   // handle on input change
   const handleChange = (e) => {
+    // one way
+    // const fields = { ...values };
+    // fields[e.target.name] = e.target.value;
+    // setValues({ ...fields });
+
+    // second way
     setValues({
       ...values,
       [e.target.name]: e.target.value,
     });
   };
 
+  const handleItems = (e, index) => {
+    const values = [...initial];
+    values[index][e.target.name] = e.target.value;
+    setInitial(values);
+  };
+
   const toggleForm = (e) => {
     dispatch({ type: "TOGGLE_FORM" });
+  };
+
+  const deleteItem = (index) => {
+    const values = [...initial];
+    values.splice(index, 1);
+    setInitial(values);
+  };
+
+  const addNewItem = () => {
+    setInitial([...initial, { name: "", price: 1, quantity: 1, total: 1 }]);
+    values.items = initial;
   };
 
   return (
@@ -167,7 +199,7 @@ const FormComponent = () => {
                     type="text"
                     name="clientStreetAddress"
                     placeholder=""
-                    value={values.clientStreetAddress}
+                    value={values.streetAddress}
                     label="Street Address"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
@@ -203,22 +235,22 @@ const FormComponent = () => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  {/* <FormField
+                  <FormField
                     type="date"
                     name="invoiceDate"
                     value={values.date}
                     label="Invoice Date"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
-                  /> */}
-                  <CustomDate
+                  />
+                  {/* <CustomDate
                     type="date"
                     name="invoiceDate"
                     value={values.createdAt}
                     label="Invoice Date"
                     errMsg="Can't be empty!"
                     updateValue={handleChange}
-                  />
+                  /> */}
                   <CustomSelect
                     label="Payment Terms"
                     errMsg="Can't be empty!"
@@ -231,8 +263,8 @@ const FormComponent = () => {
                 <FormGroup>
                   <FormField
                     type="text"
-                    name="projectDescription"
-                    placeholder=""
+                    name="description"
+                    placeholder="e.g. Graphic Design Service"
                     value={values.description}
                     label="Project Description"
                     errMsg="Can't be empty!"
@@ -240,35 +272,58 @@ const FormComponent = () => {
                   />
                 </FormGroup>
                 <ItemList>Item List</ItemList>
-                <FormGroup>
-                  <FormField
-                    type="text"
-                    name="itemName"
-                    placeholder=""
-                    label="Item Name"
-                    errMsg="Can't be empty!"
-                    updateValue={handleChange}
-                  />
-                  <FormField
-                    type="number"
-                    name="quantity"
-                    placeholder=""
-                    value=""
-                    min="1"
-                    label="QTY."
-                    updateValue={handleChange}
-                  />
-                  <FormField
-                    type="number"
-                    name="price"
-                    placeholder=""
-                    value={currentInvoice ? "" : ""}
-                    min="1"
-                    label="Price"
-                    updateValue={handleChange}
-                  />
-                </FormGroup>
-                <LargeButton variant={currentTheme} type="submit">
+                <>
+                  {initial?.map((item, i) => (
+                    <FormGroup id="items" key={i}>
+                      <FormField
+                        id="item-name"
+                        type="text"
+                        name="name"
+                        placeholder="e.g. Create Logo"
+                        value={item.name}
+                        label="Item Name"
+                        errMsg="Can't be empty!"
+                        updateValue={(e) => handleItems(e, i)}
+                      />
+                      <FormField
+                        id="qty"
+                        type="number"
+                        name="quantity"
+                        placeholder=""
+                        value={item.quantity}
+                        min={1}
+                        label="QTY."
+                        updateValue={(e) => handleItems(e, i)}
+                      />
+                      <FormField
+                        id="price"
+                        type="number"
+                        name="price"
+                        placeholder=""
+                        value={Number(item.price).toFixed(2)}
+                        min={1}
+                        label="Price"
+                        updateValue={(e) => handleItems(e, i)}
+                      />
+                      <FormField
+                        id="total"
+                        type="number"
+                        name="total"
+                        placeholder=""
+                        value={(
+                          Number(item.quantity) * Number(item.price)
+                        ).toFixed(2)}
+                        label="Total"
+                        updateValue={(e) => handleItems(e, i)}
+                      />
+                      <DeleteIcon
+                        color={"#888EB0"}
+                        deleteItem={() => deleteItem(i)}
+                      />
+                    </FormGroup>
+                  ))}
+                </>
+                <LargeButton variant={currentTheme} onClick={addNewItem}>
                   <PlusIcon color={currentTheme.plusIcon} /> Add New Item
                 </LargeButton>
                 <Error>- All fields must be added</Error>
@@ -277,16 +332,21 @@ const FormComponent = () => {
             </form>
             <Buttons>
               <Left>
-                <Button id="discard" type="discard" toggleForm={toggleForm} />
+                <Button
+                  id="discard"
+                  variant="discard"
+                  handleEvent={toggleForm}
+                />
               </Left>
               <Right>
                 <Button
-                  type="save as draft"
+                  variant="save as draft"
                   onClick={() => console.log("save as draft")}
                 />
                 <Button
-                  type="save & send"
-                  onClick={() => console.log("save & send")}
+                  type="submit"
+                  variant="save & send"
+                  handleEvent={(e) => handleForm(e)}
                 />
               </Right>
             </Buttons>
@@ -314,7 +374,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   height: 100vh;
-  width: 833px;
+  width: 740px;
   padding: 56px;
   padding-right: 26px;
   padding-left: calc(103px + 56px);
@@ -328,6 +388,28 @@ const FormContainer = styled.div`
   padding-right: 30px;
   padding-bottom: 150px;
   overflow-y: scroll;
+
+  #items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #item-name {
+      width: 200px;
+    }
+
+    #qty {
+      flex: auto;
+    }
+
+    #price {
+      width: 90px;
+    }
+
+    #total {
+      width: 90px;
+    }
+  }
 `;
 
 const FormGroup = styled.div`
@@ -335,7 +417,7 @@ const FormGroup = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
 `;
@@ -351,7 +433,7 @@ const Subtitle = styled.h5`
   color: ${({ theme }) => theme.colors.purple};
 `;
 
-const LargeButton = styled.button`
+const LargeButton = styled.div`
   appearance: none;
   border: none;
   border-radius: 50px;
@@ -360,6 +442,7 @@ const LargeButton = styled.button`
   font-weight: 700;
   padding: 18px;
   width: 100%;
+  text-align: center;
   cursor: pointer;
   color: ${(props) => {
     return props.variant.name == "light-theme" ? "#7E88C3" : "#DFE3FA";
@@ -397,7 +480,7 @@ const Buttons = styled.div`
   position: fixed;
   left: 0;
   bottom: 0;
-  width: 833px;
+  width: 740px;
   height: 102px;
   padding-left: calc(103px + 56px);
   padding-right: 66px;

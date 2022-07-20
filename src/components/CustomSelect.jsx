@@ -2,7 +2,7 @@ import { useState, useRef, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 import ArrowDownIcon from "./ArrowDownIcon";
 
-const CustomSelect = ({ label, errMsg, options, value = 30, values }) => {
+const CustomSelect = ({ label, errMsg, options, value, values }) => {
   const [paymentTerms, setPaymentTerms] = useState(false);
   const [active, setActive] = useState(false);
   const { currentTheme } = useContext(ThemeContext);

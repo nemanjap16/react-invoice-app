@@ -35,7 +35,7 @@ export default CustomDate;
 
 const Field = styled.div`
   position: relative;
-  flex: 1;
+  flex: auto;
   height: 100%;
   color: ${({ theme }) => theme.currentTheme.text};
   background-color: ${({ theme }) => theme.currentTheme.formBg};
